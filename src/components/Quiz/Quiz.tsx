@@ -6,19 +6,21 @@ import calculateScore from './CalculateScore';
 
 const Quiz: React.FC = () => {
   const { id } = useParams();
-  const navigate = useNavigate();
+    const navigate = useNavigate();
 
   const [quiz, setQuiz] = useState<QuizType | null>(null);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedAnswers, setSelectedAnswers] = useState<Map<number, Set<number>>>(new Map());
   const [timeLeft, setTimeLeft] = useState(20);
-
+    const point = quiz?.pointsPerAnswer?quiz.pointsPerAnswer:1
+ 
   useEffect(() => {
     const fetchQuiz = async () => {
       const quizzes = await getQuizzes();
       const foundQuiz = quizzes.find(q => q.id === id);
       if (foundQuiz) {
-        setQuiz(foundQuiz);
+          setQuiz(foundQuiz);
+          setTimeLeft(foundQuiz.timeLimit?foundQuiz.timeLimit:20)
         initializeSelectedAnswers(foundQuiz.questions);
       }
     };
@@ -26,43 +28,16 @@ const Quiz: React.FC = () => {
     fetchQuiz();
   }, [id]);
     
+ 
   const handleNextQuestion = useCallback(() => {
-     if (quiz && currentQuestionIndex < quiz.questions.length - 1) {
+    if (quiz && currentQuestionIndex < quiz.questions.length - 1 && timeLeft && timeLeft > 0) {
       setCurrentQuestionIndex(currentQuestionIndex + 1);
-    } else if (quiz) {
-      const finalScore = calculateScore(quiz, selectedAnswers);
-      navigate(`/result/${id}`, { state: { score: finalScore, total: quiz.questions.length } });
+    } else if ((quiz && currentQuestionIndex === quiz.questions.length - 1) || (quiz && timeLeft === 0)) {
+      const finalScore = calculateScore(quiz, selectedAnswers, quiz.pointsPerAnswer);
+      navigate(`/result/${id}`, { state: { score: finalScore, total: quiz.questions.length*point } });
     }
-  }, [currentQuestionIndex, quiz, id, navigate, selectedAnswers]);
+  }, [currentQuestionIndex, quiz, id, navigate,timeLeft, selectedAnswers, point]);
 
-  useEffect(() => {
-    if (timeLeft === 0) {
-      handleNextQuestion(); 
-    }
-
-    const timer = setTimeout(() => {
-      setTimeLeft(timeLeft - 1);
-    }, 1000);
-
-    return () => clearTimeout(timer);
-  }, [timeLeft, handleNextQuestion]);
-    
-  useEffect(() => {
-    setTimeLeft(20);
-    setSelectedAnswers((prevSelectedAnswers) => {
-      const newSelectedAnswers = new Map(prevSelectedAnswers);
-      newSelectedAnswers.set(currentQuestionIndex, new Set<number>());
-      return newSelectedAnswers;
-    });
-  }, [currentQuestionIndex]);
-
-  const initializeSelectedAnswers = (questions: Question[]) => {
-    const initialMap = new Map<number, Set<number>>();
-    questions.forEach((_, questionIndex) => {
-      initialMap.set(questionIndex, new Set<number>());
-    });
-    setSelectedAnswers(initialMap);
-  };
 
   const handleAnswerChange = (questionIndex: number, answerIndex: number) => {
     setSelectedAnswers((prevSelectedAnswers) => {
@@ -77,6 +52,29 @@ const Quiz: React.FC = () => {
       return newSelectedAnswers;
     });
   };
+
+
+  const initializeSelectedAnswers = (questions: Question[]) => {
+    const initialMap = new Map<number, Set<number>>();
+    questions.forEach((_, questionIndex) => {
+      initialMap.set(questionIndex, new Set<number>());
+    });
+    setSelectedAnswers(initialMap);
+  };
+
+ 
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (timeLeft && timeLeft > 0) {
+        setTimeLeft(timeLeft - 1);
+      } else {
+        handleNextQuestion();
+      }
+    }, 1000);
+
+    return () => clearTimeout(timer);
+  }, [timeLeft, handleNextQuestion]);
+
 
   if (!quiz) {
     return <div>Loading...</div>;

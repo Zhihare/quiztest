@@ -10,6 +10,8 @@ const QuizForm: React.FC = () => {
   const [quiz, setQuiz] = useState<Quiz>({
     id: '',
     name: '',
+    timeLimit: undefined, 
+    pointsPerAnswer: undefined, 
     questions: [],
   });
 
@@ -82,6 +84,24 @@ const QuizForm: React.FC = () => {
           type="text"
           value={quiz.name}
           onChange={(e) => setQuiz({ ...quiz, name: e.target.value })}
+          className="w-full px-3 py-2 rounded border border-gray-300 focus:border-blue-500 focus:outline-none"
+        />
+      </div>
+      <div className="mb-4">
+        <label className="block text-sm font-medium text-gray-700">Time Limit (seconds):</label>
+        <input
+          type="number"
+          value={quiz.timeLimit}
+          onChange={(e) => setQuiz({ ...quiz, timeLimit: +e.target.value })}
+          className="w-full px-3 py-2 rounded border border-gray-300 focus:border-blue-500 focus:outline-none"
+        />
+      </div>
+      <div className="mb-4">
+        <label className="block text-sm font-medium text-gray-700">Points per Correct Answer:</label>
+        <input
+          type="number"
+          value={quiz.pointsPerAnswer}
+          onChange={(e) => setQuiz({ ...quiz, pointsPerAnswer: +e.target.value })}
           className="w-full px-3 py-2 rounded border border-gray-300 focus:border-blue-500 focus:outline-none"
         />
       </div>

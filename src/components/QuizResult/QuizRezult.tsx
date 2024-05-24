@@ -5,7 +5,6 @@ const QuizResult: React.FC = () => {
   const { state } = useLocation() as any;
   const navigate = useNavigate();
     const { id } = useParams<{ id: string }>();
-    console.log(state);
 
   return (
     <div className="max-w-2xl mx-auto p-4 bg-white shadow-md rounded-lg">

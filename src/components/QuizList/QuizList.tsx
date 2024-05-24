@@ -6,7 +6,8 @@ import { generateId, getRandomColor } from '../Service/generateId';
 
 
 const QuizList: React.FC = () => {
-  const [quizzes, setQuizzes] = useState<Quiz[]>([]);
+    const [quizzes, setQuizzes] = useState<Quiz[]>([]);
+    const [searchTerm, setSearchTerm] = useState<string>('');
   const navigate = useNavigate();
   useEffect(() => {
     fetchQuizzes();
@@ -30,6 +31,10 @@ const QuizList: React.FC = () => {
     navigate(`/quiz/${id}`);
     };
 
+    const filteredQuizzes = quizzes.filter(quiz =>
+    quiz.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
 return(
    <div className="max-w-4xl mx-auto p-4 bg-white shadow-md rounded-lg">
       <h2 className="text-2xl font-bold mb-4">Quiz List</h2>
@@ -37,8 +42,15 @@ return(
         Add New Quiz
         </button>
         <div>
+              <input
+          type="text"
+          placeholder="Search by quiz name..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className="w-full border-2 border-gray-200 p-2 rounded mb-4"
+        />
        <ul className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {quizzes.map(quiz => (
+        {filteredQuizzes.map(quiz => (
           <li key={quiz.id} className="flex flex-col justify-between h-48 p-4 border-4 rounded-lg" style={{ background: getRandomColor() }}>
             <div className="flex-grow">
               <p className="font-bold text-xl mb-2">{quiz.name}</p>

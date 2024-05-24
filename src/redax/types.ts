@@ -10,7 +10,9 @@ export interface Question {
 }
 
 export interface Quiz {
-  id: string;
-  name: string;
-  questions: Question[];
+    id: string;
+    name: string;
+    timeLimit: number|undefined, 
+    pointsPerAnswer: number|undefined,
+    questions: Question[];
 }

@@ -3,7 +3,9 @@ import { Quiz } from './types';
 export let initialQuizzes: Quiz[] = [
   {
     id: '1',
-    name: 'General Knowledge',
+        name: 'General Knowledge',
+    timeLimit: 20, 
+    pointsPerAnswer: 2,
     questions: [
         {
         id: '10001',
@@ -29,7 +31,9 @@ export let initialQuizzes: Quiz[] = [
   },
   {
     id: '2',
-    name: 'Programming',
+      name: 'Programming',
+    timeLimit: 20, 
+    pointsPerAnswer: 2,
     questions: [
         {
         id: '20001',
