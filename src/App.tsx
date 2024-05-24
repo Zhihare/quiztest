@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, Routes, NavLink } from 'react-router-dom';
+import {Route, Routes} from 'react-router-dom';
 import QuizList from './components/QuizList/QuizList';
 import QuizForm from './components/QuizForm/QuizForm';
 import Quiz from './components/Quiz/Quiz';
