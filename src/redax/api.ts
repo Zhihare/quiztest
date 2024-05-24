@@ -1,38 +1,50 @@
-import { initialQuizzes } from './initialQuiz';
+
+
 import { Quiz } from './types';
 
 const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
-const initializeQuizzes = () => {
-  const quizzes = localStorage.getItem('quizzes');
-  if (!quizzes) {
-    localStorage.setItem('quizzes', JSON.stringify(initialQuizzes));
-  }
-};
-
-initializeQuizzes();
-
 export const getQuizzes = async (): Promise<Quiz[]> => {
   await delay(500);
-  return JSON.parse(localStorage.getItem('quizzes') || '[]');
+  const quizzes = JSON.parse(localStorage.getItem('quizzes') || '[]');
+  return quizzes;
+};
+
+export const getQuizById = async (id: string): Promise<Quiz | null> => {
+  await delay(500);
+  const quizzes: Quiz[] = JSON.parse(localStorage.getItem('quizzes') || '[]');
+  const quiz = quizzes.find(q => q.id === id) || null;
+  return quiz;
 };
 
 export const saveQuiz = async (quiz: Quiz): Promise<void> => {
   await delay(500);
-  const quizzes: Quiz[] = JSON.parse(localStorage.getItem('quizzes') || '[]');
-  if (quiz.id) {
-    const index = quizzes.findIndex(q => q.id === quiz.id);
-    quizzes[index] = quiz;
+  let quizzes: Quiz[] = JSON.parse(localStorage.getItem('quizzes') || '[]');
+
+  const existingQuizIndex = quizzes.findIndex(q => q.id === quiz.id);
+  if (existingQuizIndex !== -1) {
+    quizzes[existingQuizIndex] = quiz;
   } else {
     quiz.id = Date.now().toString();
     quizzes.push(quiz);
   }
+
   localStorage.setItem('quizzes', JSON.stringify(quizzes));
 };
 
 export const deleteQuiz = async (id: string): Promise<void> => {
   await delay(500);
-  const quizzes: Quiz[] = JSON.parse(localStorage.getItem('quizzes') || '[]');
-  const updatedQuizzes = quizzes.filter(q => q.id !== id);
-  localStorage.setItem('quizzes', JSON.stringify(updatedQuizzes));
+  let quizzes: Quiz[] = JSON.parse(localStorage.getItem('quizzes') || '[]');
+  quizzes = quizzes.filter(q => q.id !== id);
+  localStorage.setItem('quizzes', JSON.stringify(quizzes));
+};
+
+export const updateQuiz = async (quiz: Quiz): Promise<void> => {
+    await delay(500);
+    let quizzes: Quiz[] = JSON.parse(localStorage.getItem('quizzes') || '[]');
+  const existingQuizIndex = quizzes.findIndex(q => q.id === quiz.id);
+  if (existingQuizIndex !== -1) {
+    quizzes[existingQuizIndex] = quiz;
+    localStorage.setItem('quizzes', JSON.stringify(quizzes));
+  }
 };

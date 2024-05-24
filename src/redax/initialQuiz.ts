@@ -1,6 +1,6 @@
 import { Quiz } from './types';
 
-export const initialQuizzes: Quiz[] = [
+export let initialQuizzes: Quiz[] = [
   {
     id: '1',
     name: 'General Knowledge',
@@ -42,7 +42,7 @@ export const initialQuizzes: Quiz[] = [
         ],
       },
         {
-        id: '2002',
+        id: '20002',
         text: 'Which language is used for styling web pages?',
         answers: [
           { text: 'HTML', isCorrect: false },

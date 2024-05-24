@@ -1,35 +1,64 @@
-import React, { useState, useEffect } from 'react';
-import { getQuizzes, deleteQuiz } from '../../redax/api';
-import { Quiz as QuizType } from '../../redax/types';
+import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Quiz } from '../../redax/types';
+import { deleteQuiz, getQuizzes } from '../../redax/api';
+import { generateId, getRandomColor } from '../Service/generateId';
 
 
-const QuizList: React.FC<{ onEdit: (quiz: QuizType) => void, onStart: (quiz: QuizType) => void }> = ({ onEdit, onStart }) => {
-  const [quizzes, setQuizzes] = useState<QuizType[]>([]);
-
+const QuizList: React.FC = () => {
+  const [quizzes, setQuizzes] = useState<Quiz[]>([]);
+  const navigate = useNavigate();
   useEffect(() => {
-    getQuizzes().then(setQuizzes);
+    fetchQuizzes();
   }, []);
+
+  const fetchQuizzes = async () => {
+    const data = await getQuizzes();
+    setQuizzes(data);
+  };
 
   const handleDelete = async (id: string) => {
     await deleteQuiz(id);
-    setQuizzes(quizzes.filter(quiz => quiz.id !== id));
-  };
+    fetchQuizzes();
+    };
+    
+    const handleEdit = (id: string) => {
+    navigate(`/form/${id}`);
+    };
+    
+     const handleStart = (id: string) => {
+    navigate(`/quiz/${id}`);
+    };
 
-  return (
-    <div>
-      <h1 className="text-2xl font-bold">Quizzes</h1>
-      <ul>
+return(
+   <div className="max-w-4xl mx-auto p-4 bg-white shadow-md rounded-lg">
+      <h2 className="text-2xl font-bold mb-4">Quiz List</h2>
+      <button onClick={() => navigate(`/form/${generateId()}`)} className="px-4 py-2 bg-blue-500 text-white rounded mb-4">
+        Add New Quiz
+        </button>
+        <div>
+       <ul className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {quizzes.map(quiz => (
-          <li key={quiz.id} className="flex justify-between items-center">
-            <span>{quiz.name}</span>
-            <div>
-              <button onClick={() => onEdit(quiz)} className="bg-blue-500 text-white px-2 py-1">Edit</button>
-              <button onClick={() => handleDelete(quiz.id)} className="bg-red-500 text-white px-2 py-1">Delete</button>
-              <button onClick={() => onStart(quiz)} className="bg-green-500 text-white px-2 py-1">Start</button>
+          <li key={quiz.id} className="flex flex-col justify-between h-48 p-4 border-4 rounded-lg" style={{ background: getRandomColor() }}>
+            <div className="flex-grow">
+              <p className="font-bold text-xl mb-2">{quiz.name}</p>
+              <span className="text-gray-700">Number of questions: {quiz.questions.length}</span>
+            </div>
+            <div className="flex justify-end space-x-2 mt-4">
+              <button onClick={() => handleStart(quiz.id)} className="px-3 py-1 bg-green-500 text-white rounded">
+                Start
+              </button>
+              <button onClick={() => handleEdit(quiz.id)} className="px-3 py-1 bg-yellow-500 text-white rounded">
+                Edit
+              </button>
+              <button onClick={() => handleDelete(quiz.id)} className="px-3 py-1 bg-red-500 text-white rounded">
+                Delete
+              </button>
             </div>
           </li>
         ))}
       </ul>
+    </div>
     </div>
   );
 };
