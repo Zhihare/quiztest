@@ -5,6 +5,7 @@ import { deleteQuiz, getQuizzes } from '../../redax/api';
 import { generateId, getRandomColor } from '../Service/generateId';
 
 
+
 const QuizList: React.FC = () => {
     const [quizzes, setQuizzes] = useState<Quiz[]>([]);
     const [searchTerm, setSearchTerm] = useState<string>('');

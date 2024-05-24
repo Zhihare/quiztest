@@ -12,7 +12,7 @@ export interface Question {
 export interface Quiz {
     id: string;
     name: string;
-    timeLimit: number|undefined, 
-    pointsPerAnswer: number|undefined,
+    timeLimit: number, 
+    pointsPerAnswer: number,
     questions: Question[];
 }

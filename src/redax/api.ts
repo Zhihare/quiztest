@@ -1,12 +1,21 @@
 
 
+import { quizData } from './initialQuiz';
 import { Quiz } from './types';
 
 const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
 export const getQuizzes = async (): Promise<Quiz[]> => {
   await delay(500);
-  const quizzes = JSON.parse(localStorage.getItem('quizzes') || '[]');
+  let quizzes = JSON.parse(localStorage.getItem('quizzes') || '[]');
+ if (quizzes.length === 0) {
+
+    const initialQuiz = quizData
+
+    quizzes = [initialQuiz];
+    localStorage.setItem('quizzes', JSON.stringify(quizzes));
+  }
+
   return quizzes;
 };
 

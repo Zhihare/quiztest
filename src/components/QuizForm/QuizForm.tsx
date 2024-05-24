@@ -10,8 +10,8 @@ const QuizForm: React.FC = () => {
   const [quiz, setQuiz] = useState<Quiz>({
     id: '',
     name: '',
-    timeLimit: undefined, 
-    pointsPerAnswer: undefined, 
+    timeLimit: 60, 
+    pointsPerAnswer: 1, 
     questions: [],
   });
 
