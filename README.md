@@ -49,7 +49,7 @@ This is a React-based quiz application that allows users to take quizzes, view t
 - **QuizList**: Displays a list of quizzes with options to start, edit, or delete.
 - **QuizForm**: Form for creating or editing quizzes.
 - **Quiz**: Component to take the quiz, handle timing, and calculate scores.
--**Result**: Displays the quiz results after completion.
+- **Result**: Displays the quiz results after completion.
 
 
 ## Running the App
