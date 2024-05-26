@@ -1,9 +1,11 @@
+import { getRandomGradient } from "../components/Service/generateRandomGradient";
 
 export const quizData = {
   id: '1',
   name: 'React Quiz',
-  timeLimit: 600, // 10 minutes in milliseconds
+  timeLimit: 600,
   pointsPerAnswer: 10,
+  color: getRandomGradient(),
   questions: [
     {
       id: '1',

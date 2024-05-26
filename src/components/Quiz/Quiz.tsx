@@ -83,7 +83,7 @@ const Quiz: React.FC = () => {
   const currentQuestion = quiz.questions[currentQuestionIndex];
 
   return (
-    <div className="max-w-4xl mx-auto p-4 bg-white shadow-md rounded-lg">
+    <div className="max-w-4xl mx-auto p-4 bg-white shadow-md rounded-lg" style={{background: quiz.color}}>
       <h2 className="text-4xl font-bold text-center mb-4 p-2 bg-blue-200 rounded-lg">{quiz.name}</h2>
       <div className="mb-4 p-4 bg-gray-100 rounded-lg">
         <p className="text-md font-extralight text-sm mb-4">Question {currentQuestionIndex + 1} of {quiz.questions.length}</p>

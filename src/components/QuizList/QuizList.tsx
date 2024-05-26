@@ -2,7 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Quiz } from '../../redax/types';
 import { deleteQuiz, getQuizzes } from '../../redax/api';
-import { generateId, getRandomColor } from '../Service/generateId';
+import { generateId } from '../Service/generateId';
+
 
 
 
@@ -52,10 +53,10 @@ return(
         />
        <ul className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {filteredQuizzes.map(quiz => (
-          <li key={quiz.id} className="flex flex-col justify-between h-48 p-4 border-4 rounded-lg" style={{ background: getRandomColor() }}>
+          <li key={quiz.id} className="flex flex-col justify-between h-48 p-4 border-4 rounded-lg" style={{ background: quiz.color }}>
             <div className="flex-grow">
-              <p className="font-bold text-xl mb-2">{quiz.name}</p>
-              <span className="text-gray-700">Number of questions: {quiz.questions.length}</span>
+              <p className="font-bold text-white-700 text-xl mb-2">{quiz.name}</p>
+              <span className="text-white-700">Number of questions: {quiz.questions.length}</span>
             </div>
             <div className="flex justify-end space-x-2 mt-4">
               <button onClick={() => handleStart(quiz.id)} className="px-3 py-1 bg-green-500 text-white rounded">

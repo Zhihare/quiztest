@@ -10,10 +10,13 @@ const QuizForm: React.FC = () => {
   const [quiz, setQuiz] = useState<Quiz>({
     id: '',
     name: '',
-    timeLimit: 60, 
-    pointsPerAnswer: 1, 
+    timeLimit: 60,
+    pointsPerAnswer: 1,
+    color: 'linear-gradient(135deg, #FF5733, #33FF8C)',
     questions: [],
   });
+
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -28,9 +31,39 @@ const QuizForm: React.FC = () => {
     fetchData();
   }, [id]);
 
+  const validateQuiz = (): boolean => {
+    if (!quiz.name.trim()) {
+      setError('Quiz name is required.');
+      return false;
+    }
+
+    if (quiz.questions.length === 0) {
+      setError('At least one question is required.');
+      return false;
+    }
+
+    for (const question of quiz.questions) {
+      if (question.answers.length === 0) {
+        setError('Each question must have at least one answer.');
+        return false;
+      }
+
+      const hasCorrectAnswer = question.answers.some(answer => answer.isCorrect);
+      if (!hasCorrectAnswer) {
+        setError('Each question must have at least one correct answer.');
+        return false;
+      }
+    }
+
+    setError(null);
+    return true;
+  };
+
   const handleSave = async () => {
-    await saveQuiz(quiz);
-    navigate('/');
+    if (validateQuiz()) {
+      await saveQuiz(quiz);
+      navigate('/');
+    }
   };
 
   const handleQuestionChange = (index: number, value: Partial<Question>) => {
@@ -76,7 +109,7 @@ const QuizForm: React.FC = () => {
   };
 
   return (
-    <div className="max-w-4xl mx-auto p-4 bg-white shadow-md rounded-lg">
+    <div className="max-w-4xl mx-auto p-4 bg-white shadow-md rounded-lg" style={{ background: quiz.color }} >
       <h2 className="text-2xl font-bold mb-4">{id ? 'Edit Quiz' : 'Create Quiz'}</h2>
       <div className="mb-4">
         <label className="block text-sm font-medium text-gray-700">Quiz Name:</label>
@@ -133,24 +166,25 @@ const QuizForm: React.FC = () => {
                   onChange={(e) => handleAnswerChange(questionIndex, answerIndex, { text: e.target.value })}
                   className="w-full px-3 py-2 rounded border border-gray-300 focus:border-blue-500 focus:outline-none"
                 />
-                <button onClick={() => deleteAnswer(questionIndex, answerIndex)} className="text-xs px-3 py-1  bg-red-500 text-white rounded">
+                <button onClick={() => deleteAnswer(questionIndex, answerIndex)} className="text-xs px-3 py-1 bg-red-500 text-white rounded border-white border-2">
                   Delete Answer
                 </button>
               </div>
             ))}
-            <button onClick={() => addAnswer(questionIndex)} className="px-3 py-1 bg-blue-500 text-white rounded mr-2">
+            <button onClick={() => addAnswer(questionIndex)} className="px-3 py-1 bg-blue-500 text-white rounded mr-2 border-white border-2">
               Add Answer
             </button>
-            <button onClick={() => deleteQuestion(questionIndex)} className="px-3 py-1  bg-red-500 text-white rounded">
+            <button onClick={() => deleteQuestion(questionIndex)} className="px-3 py-1 bg-red-500 text-white rounded border-white border-2">
               Delete Question
             </button>
           </div>
         ))}
-        <button onClick={addQuestion} className="px-3 py-1 bg-blue-500 text-white rounded">
+        <button onClick={addQuestion} className="px-3 py-1 bg-blue-500 text-white rounded border-white border-2">
           Add Question
         </button>
       </div>
-      <button onClick={handleSave} className="px-4 py-2 bg-green-500 text-white rounded">
+      {error && <div className="mb-4 text-red-500">{error}</div>}
+      <button onClick={handleSave} className="px-4 py-2 bg-green-500 text-white rounded border-white border-2">
         Save
       </button>
     </div>

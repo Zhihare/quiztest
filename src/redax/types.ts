@@ -14,5 +14,6 @@ export interface Quiz {
     name: string;
     timeLimit: number, 
     pointsPerAnswer: number,
+    color: string,
     questions: Question[];
 }

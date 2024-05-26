@@ -1,5 +1,5 @@
 
-
+import { getRandomGradient } from '../components/Service/generateRandomGradient';
 import { quizData } from './initialQuiz';
 import { Quiz } from './types';
 
@@ -35,6 +35,7 @@ export const saveQuiz = async (quiz: Quiz): Promise<void> => {
     quizzes[existingQuizIndex] = quiz;
   } else {
     quiz.id = Date.now().toString();
+    quiz.color = getRandomGradient();
     quizzes.push(quiz);
   }
 

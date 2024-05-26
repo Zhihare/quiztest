@@ -12,3 +12,5 @@ export const getRandomColor = (): string => {
   }
   return color;
 };
+
+
