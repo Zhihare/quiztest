@@ -141,7 +141,7 @@ const QuizForm: React.FC = () => {
       <div className="mb-4">
         <h3 className="text-lg font-semibold mb-2">Questions:</h3>
         {quiz.questions.map((question, questionIndex) => (
-          <div key={question.id} className="mb-4 p-2 border border-gray-300 rounded">
+          <div key={question.id} className="mb-4 p-2 border border-gray-300 rounded  bg-gray-100">
             <div className="mb-2">
               <label className="block text-sm font-medium text-gray-700">Question Text:</label>
               <input

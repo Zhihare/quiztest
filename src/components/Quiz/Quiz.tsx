@@ -2,42 +2,40 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Quiz as QuizType, Question } from '../../redax/types';
 import { getQuizzes } from '../../redax/api';
-import calculateScore from './CalculateScore'; 
+import calculateScore from './CalculateScore';
 
 const Quiz: React.FC = () => {
-  const { id } = useParams();
-    const navigate = useNavigate();
+  const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
 
   const [quiz, setQuiz] = useState<QuizType | null>(null);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedAnswers, setSelectedAnswers] = useState<Map<number, Set<number>>>(new Map());
   const [timeLeft, setTimeLeft] = useState(20);
-    const point = quiz?.pointsPerAnswer?quiz.pointsPerAnswer:1
- 
+
   useEffect(() => {
     const fetchQuiz = async () => {
       const quizzes = await getQuizzes();
       const foundQuiz = quizzes.find(q => q.id === id);
       if (foundQuiz) {
-          setQuiz(foundQuiz);
-          setTimeLeft(foundQuiz.timeLimit?foundQuiz.timeLimit:20)
+        setQuiz(foundQuiz);
+        setTimeLeft(foundQuiz.timeLimit ? foundQuiz.timeLimit : 20);
         initializeSelectedAnswers(foundQuiz.questions);
       }
     };
 
     fetchQuiz();
   }, [id]);
-    
- 
+
   const handleNextQuestion = useCallback(() => {
     if (quiz && currentQuestionIndex < quiz.questions.length - 1 && timeLeft && timeLeft > 0) {
       setCurrentQuestionIndex(currentQuestionIndex + 1);
     } else if ((quiz && currentQuestionIndex === quiz.questions.length - 1) || (quiz && timeLeft === 0)) {
       const finalScore = calculateScore(quiz, selectedAnswers, quiz.pointsPerAnswer);
-      navigate(`/result/${id}`, { state: { score: finalScore, total: quiz.questions.length*point } });
+      const selectedAnswersArray = Array.from(selectedAnswers.entries());
+      navigate(`/result/${id}`, { state: { score: finalScore, total: quiz.questions.length, selectedAnswers: selectedAnswersArray } });
     }
-  }, [currentQuestionIndex, quiz, id, navigate,timeLeft, selectedAnswers, point]);
-
+  }, [currentQuestionIndex, quiz, id, navigate, timeLeft, selectedAnswers]);
 
   const handleAnswerChange = (questionIndex: number, answerIndex: number) => {
     setSelectedAnswers((prevSelectedAnswers) => {
@@ -53,7 +51,6 @@ const Quiz: React.FC = () => {
     });
   };
 
-
   const initializeSelectedAnswers = (questions: Question[]) => {
     const initialMap = new Map<number, Set<number>>();
     questions.forEach((_, questionIndex) => {
@@ -62,7 +59,6 @@ const Quiz: React.FC = () => {
     setSelectedAnswers(initialMap);
   };
 
- 
   useEffect(() => {
     const timer = setTimeout(() => {
       if (timeLeft && timeLeft > 0) {
@@ -75,24 +71,20 @@ const Quiz: React.FC = () => {
     return () => clearTimeout(timer);
   }, [timeLeft, handleNextQuestion]);
 
-
   if (!quiz) {
     return <div>Loading...</div>;
   }
 
-
-   const formatTime = (time: number) => {
+  const formatTime = (time: number) => {
     const minutes = Math.floor(time / 60);
     const seconds = time % 60;
     return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
   };
 
-
-
   const currentQuestion = quiz.questions[currentQuestionIndex];
 
   return (
-    <div className="max-w-4xl mx-auto p-4 bg-white shadow-md rounded-lg" style={{background: quiz.color}}>
+    <div className="max-w-4xl mx-auto p-4 bg-white shadow-md rounded-lg" style={{ background: quiz.color }}>
       <h2 className="text-4xl font-bold text-center mb-4 p-2 bg-blue-200 rounded-lg">{quiz.name}</h2>
       <div className="mb-4 p-4 bg-gray-100 rounded-lg">
         <p className="text-md font-extralight text-sm mb-4">Question {currentQuestionIndex + 1} of {quiz.questions.length}</p>
