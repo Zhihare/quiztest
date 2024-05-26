@@ -80,6 +80,15 @@ const Quiz: React.FC = () => {
     return <div>Loading...</div>;
   }
 
+
+   const formatTime = (time: number) => {
+    const minutes = Math.floor(time / 60);
+    const seconds = time % 60;
+    return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+  };
+
+
+
   const currentQuestion = quiz.questions[currentQuestionIndex];
 
   return (
@@ -105,7 +114,7 @@ const Quiz: React.FC = () => {
         <button onClick={handleNextQuestion} className="px-4 py-2 bg-blue-500 text-white rounded">
           {currentQuestionIndex < quiz.questions.length - 1 ? 'Next Question' : 'Finish'}
         </button>
-        <p className="bg-red-500 text-white px-4 py-2 rounded-lg">Time left: {timeLeft} seconds</p>
+        <p className=" bg-white text-red-500 px-4 py-2 rounded-lg">Time left: {formatTime(timeLeft)}</p>
       </div>
     </div>
   );
