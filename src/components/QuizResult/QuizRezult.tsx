@@ -47,7 +47,7 @@ const QuizResult: React.FC = () => {
   };
 
   return (
-    <div className="max-w-2xl mx-auto p-4 bg-white shadow-md rounded-lg" style={{ background: quiz.color }}>
+    <div className="max-w-6xl mx-auto p-8 bg-white shadow-md rounded-lg" style={{ background: quiz.color }}>
       <h2 className="text-2xl font-bold mb-4">Quiz Result</h2>
       <p className="text-xl text-center font-semibold mb-2">
         You scored <span className="text-green-500 p-1 bg-cyan-50 rounded-lg">{state.score}</span> out of {state.total * quiz.pointsPerAnswer}

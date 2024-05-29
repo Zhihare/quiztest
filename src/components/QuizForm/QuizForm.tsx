@@ -109,7 +109,7 @@ const QuizForm: React.FC = () => {
   };
 
   return (
-    <div className="max-w-6xl mx-auto p-4 bg-white shadow-md rounded-lg" style={{ background: quiz.color }} >
+    <div className="max-w-6xl mx-auto p-8 bg-white shadow-md rounded-lg" style={{ background: quiz.color }} >
       <h2 className="text-2xl font-bold mb-4">{id ? 'Edit Quiz' : 'Create Quiz'}</h2>
       <div className="mb-4">
         <label className="block text-sm font-medium text-gray-700">Quiz Name:</label>
